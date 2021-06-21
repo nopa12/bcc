@@ -65,6 +65,24 @@ void PyPerfCollapsedPrinter::prepare() {
   }
 }
 
+const char *PyPerfCollapsedPrinter::sample_strerror(enum error_code error) {
+  switch (error) {
+    case ERROR_NONE: return "ERROR_NONE";
+    case ERROR_MISSING_PYSTATE: return "ERROR_MISSING_PYSTATE";
+    case ERROR_THREAD_STATE_NULL: return "ERROR_THREAD_STATE_NULL";
+    case ERROR_INTERPRETER_NULL: return "ERROR_INTERPRETER_NULL";
+    case ERROR_TOO_MANY_THREADS: return "ERROR_TOO_MANY_THREADS";
+    case ERROR_THREAD_STATE_NOT_FOUND: return "ERROR_THREAD_STATE_NOT_FOUND";
+    case ERROR_EMPTY_STACK: return "ERROR_EMPTY_STACK";
+    case ERROR_BAD_FSBASE: return "ERROR_BAD_FSBASE";
+    case ERROR_INVALID_PTHREADS_IMPL: return "ERROR_INVALID_PTHREADS_IMPL";
+    case ERROR_THREAD_STATE_HEAD_NULL: return "ERROR_THREAD_STATE_HEAD_NULL";
+    case ERROR_BAD_THREAD_STATE: return "ERROR_BAD_THREAD_STATE";
+    case ERROR_CALL_FAILED: return "ERROR_CALL_FAILED";
+    default: return "ERROR_UNKNOWN_CODE";
+  }
+}
+
 void PyPerfCollapsedPrinter::processSamples(
     const std::vector<PyPerfSample>& samples, PyPerfProfiler* util) {
   unsigned int errors = 0;
@@ -85,7 +103,7 @@ void PyPerfCollapsedPrinter::processSamples(
       truncatedStack++;
       break;
     case STACK_STATUS_ERROR:
-      std::fprintf(output_file, ";[Sample Error %d]_[pe]", sample.errorCode);
+      std::fprintf(output_file, ";[Sample Error %s]_[pe]", sample_strerror((enum error_code)sample.errorCode));
       errors++;
       break;
     }

@@ -25,6 +25,7 @@ class PyPerfCollapsedPrinter : public PyPerfSampleProcessor {
   std::FILE *output_file;
 
   void open_new();
+  const char *sample_strerror(enum error_code error);
 };
 
 }  // namespace pyperf
