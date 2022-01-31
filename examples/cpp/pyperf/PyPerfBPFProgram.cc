@@ -215,13 +215,13 @@ get_task_thread_id(struct task_struct const *task, enum pthreads_impl pthreads_i
   // For glibc, corresponds to THREAD_SELF in "tls.h" in glibc source.
   // For musl, see definition of `__pthread_self`.
 
-#ifdef __x86_64__
   int ret;
   uint64_t fsbase;
   // HACK: Usually BCC would translate a deref of the field into `read_kernel` for us, but it
   //       doesn't detect it due to the macro (because it transforms before preprocessing).
   bpf_probe_read_kernel(&fsbase, sizeof(fsbase), (u8*)task + FS_OFS);
 
+#ifdef __x86_64__
   switch (pthreads_impl) {
   case PTI_GLIBC:
     // 0x10 = offsetof(tcbhead_t, self)
@@ -238,16 +238,33 @@ get_task_thread_id(struct task_struct const *task, enum pthreads_impl pthreads_i
     // driver passed bad value
     return ERROR_INVALID_PTHREADS_IMPL;
   }
+#elif defined(__aarch64__)
+  switch (pthreads_impl) {
+  case PTI_GLIBC:
+    // TODO const bad
+    ret = fsbase - 0x6f0;
+    break;
+
+  case PTI_MUSL:
+    // TODO ensure really same as x86
+    // __pthread_self / __get_tp reads %fs:0x0
+    // which corresponds to the field "self" in struct pthread
+    ret = bpf_probe_read_user(thread_id, sizeof(*thread_id), (void *)fsbase);
+    break;
+
+  default:
+    // driver passed bad value
+    return ERROR_INVALID_PTHREADS_IMPL;
+  }
+#else
+#error "Unsupported platform"
+#endif // __x86_64__
 
   if (ret < 0) {
     return ERROR_BAD_FSBASE;
   }
 
   return ERROR_NONE;
-
-#else  // __x86_64__
-#error "Unsupported platform"
-#endif // __x86_64__
 }
 
 // this function is trivial, but we need to do map lookup in separate function,
