@@ -231,7 +231,7 @@ struct PyPerfSample {
   uint8_t stackStatus;
   int32_t kernelStackId;
   std::vector<int32_t> pyStackIds;
-  // NativeStackTrace nativeStack;
+  NativeStackTrace nativeStack;
 
   explicit PyPerfSample(const Event* raw, int rawSize)
       : pid(raw->pid),
@@ -240,7 +240,9 @@ struct PyPerfSample {
         errorCode(raw->error_code),
         stackStatus(raw->stack_status),
         kernelStackId(raw->kernel_stack_id),
-        pyStackIds(raw->stack, raw->stack + raw->stack_len) {}
+        pyStackIds(raw->stack, raw->stack + raw->stack_len),
+        nativeStack(raw->pid, raw->raw_user_stack, raw->user_stack_len,
+                    raw->user_ip, raw->user_sp) {}
 };
 
 }  // namespace pyperf
