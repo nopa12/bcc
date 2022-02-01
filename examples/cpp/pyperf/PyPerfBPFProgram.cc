@@ -284,13 +284,15 @@ static __always_inline int compare_task_thread_id(uint64_t a, uint64_t b, enum p
 }
 
 static __always_inline int user_mode(struct pt_regs *regs) {
+  // ebpf doesn't allow direct access to regs (the ctx), so we need to copy it
 #if defined(__x86_64__)
-  // ebpf doesn't allow direct access to regs->cs, so we need to copy it
   int cs;
   bpf_probe_read_kernel(&cs, sizeof(cs), &(regs->cs));
   return cs & 3;
 #elif defined(__aarch64__)
-  return ((regs)->pstate & PSR_MODE_MASK) == PSR_MODE_EL0t;
+  u64 pstate;
+  bpf_probe_read_kernel(&pstate, sizeof(pstate), &(regs->pstate));
+  return (pstate & PSR_MODE_MASK) == PSR_MODE_EL0t;
 #endif
 }
 
