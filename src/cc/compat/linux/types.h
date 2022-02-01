@@ -109,6 +109,13 @@ struct pt_regs {
 #define THREAD_SHIFT        MIN_THREAD_SHIFT
 #define THREAD_SIZE  (1UL << THREAD_SHIFT)
 
+struct user_pt_regs {
+    __u64       regs[31];
+    __u64       sp;
+    __u64       pc;
+    __u64       pstate;
+};
+
 // this changes!
 // this copy is from 5.16.0
 struct pt_regs {
