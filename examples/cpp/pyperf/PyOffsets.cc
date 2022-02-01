@@ -262,7 +262,6 @@ extern const struct struct_offsets kPy37OffsetConfig = {
         .f_localsplus = 360,
     },
     .PyCodeObject = {
-        .co_nlocals = 24,
         .co_filename = 96,
         .co_name = 104,
         .co_varnames = 64,
