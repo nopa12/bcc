@@ -311,7 +311,7 @@ extern const struct struct_offsets kPy37OffsetConfig = {
     },
 };
 
-extern const struct struct_offsets kPy38ffsetConfig = {
+extern const struct struct_offsets kPy38OffsetConfig = {
     .PyObject = {
         .ob_type = 8
     },
