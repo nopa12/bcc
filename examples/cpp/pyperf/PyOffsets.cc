@@ -231,6 +231,47 @@ extern const struct struct_offsets kPy310OffsetConfig = {
 };
 
 #elif defined(__aarch64__)
+
+extern const struct struct_offsets kPy27OffsetConfig = {
+    .PyObject = {
+        .ob_type = 8
+    },
+    .String = {
+        .data = 36,                // offsetof(PyStringObject, ob_sval)
+        .size = 16,                // offsetof(PyVarObject, ob_size)
+    },
+    .PyTypeObject = {
+        .tp_name = 24
+    },
+    .PyThreadState = {
+        .next = 0,
+        .interp = 8,
+        .frame = 16,
+        .thread = 144,
+    },
+    .PyInterpreterState = {
+        .tstate_head = 8,
+    },
+    .PyRuntimeState = {
+        .interp_main = -1, // N/A
+    },
+    .PyFrameObject = {
+        .f_back = 24,
+        .f_code = 32,
+        .f_lineno = 124,
+        .f_localsplus = 376,
+    },
+    .PyCodeObject = {
+        .co_filename = 80,
+        .co_name = 88,
+        .co_varnames = 56,
+        .co_firstlineno = 96,
+    },
+    .PyTupleObject = {
+        .ob_item = 24
+    }
+};
+
 extern const struct struct_offsets kPy36OffsetConfig = {
     .PyObject = {
         .ob_type = 8
@@ -406,7 +447,7 @@ const std::vector<std::pair<version, struct_offsets>> python3Versions = {
 
 const struct_offsets& get_offsets(version& version) {
   if (version.major == 2) {
-    return kPy37OffsetConfig;
+    return kPy27OffsetConfig;
   }
   else {
     // Find offsets for Python 3 version:
