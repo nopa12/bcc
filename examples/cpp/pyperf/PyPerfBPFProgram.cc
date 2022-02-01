@@ -370,7 +370,8 @@ on_event(struct pt_regs* ctx) {
     // Are we in user mode?
     if (user_mode(ctx)) {
       // Yes - use the registers context given to the BPF program
-      user_regs = *ctx;
+      // user_regs = *ctx;
+      bpf_probe_read_kernel(&user_regs, sizeof(user_regs), ctx);
     }
     else {
       // No - use the registers context of usermode, that is stored on the stack.
