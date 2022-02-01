@@ -237,8 +237,8 @@ extern const struct struct_offsets kPy37OffsetConfig = {
         .ob_type = 8
     },
     .String = {
-        .data = 48,                // offsetof(PyStringObject, ob_sval)
-        .size = -1,                // offsetof(PyVarObject, ob_size)
+        .data = 48,
+        .size = -1,
     },
     .PyTypeObject = {
         .tp_name = 24
@@ -253,7 +253,7 @@ extern const struct struct_offsets kPy37OffsetConfig = {
         .tstate_head = 8,
     },
     .PyRuntimeState = {
-        .interp_main = 32, // N/A
+        .interp_main = 32,
     },
     .PyFrameObject = {
         .f_back = 24,
@@ -270,9 +270,6 @@ extern const struct struct_offsets kPy37OffsetConfig = {
     .PyTupleObject = {
         .ob_item = 24
     },
-    .PyCellObject = {
-        .ob_ref = 16
-    }
 };
 
 #endif
