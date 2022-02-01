@@ -26,7 +26,7 @@ execute_process(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE
 if(${ARCHITECTURE} STREQUAL "x86_64")
     target_link_libraries(PyPerf libunwind-x86_64.a)
 elseif(${ARCHITECTURE} STREQUAL "aarch64")
-    target_link_libraries(PyPerf libunwind-x86_64.a)
+    target_link_libraries(PyPerf libunwind-aarch64.a)
 endif()
 
 if(NOT CMAKE_USE_LIBBPF_PACKAGE)
