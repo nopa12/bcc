@@ -422,7 +422,7 @@ on_event(struct pt_regs* ctx) {
       int x = bpf_probe_read_user(
           &_PyThreadState_Current, sizeof(_PyThreadState_Current),
           (void*)pid_data->globals._PyThreadState_Current);
-      bpf_trace_printk("read addr %llx ret %d\n", pid_data->globals._PyThreadState_Current, ret);
+      bpf_trace_printk("read addr %llx ret %d\n", pid_data->globals._PyThreadState_Current, x);
       if (_PyThreadState_Current == 0) {
         // The GIL is released, we can only get native stacks
         // until it is held again.
