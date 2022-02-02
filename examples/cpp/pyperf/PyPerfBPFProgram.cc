@@ -370,8 +370,8 @@ on_event(struct pt_regs* ctx) {
     // Are we in user mode?
     if (user_mode(ctx)) {
       // Yes - use the registers context given to the BPF program
-      // user_regs = *ctx;
       bpf_probe_read_kernel(&user_regs, sizeof(user_regs), ctx);
+      // user_regs = *ctx;
     }
     else {
       // No - use the registers context of usermode, that is stored on the stack.
@@ -419,9 +419,10 @@ on_event(struct pt_regs* ctx) {
 
       // Get PyThreadState of the thread that currently holds the GIL
       uintptr_t _PyThreadState_Current = 0;
-      bpf_probe_read_user(
+      int x = bpf_probe_read_user(
           &_PyThreadState_Current, sizeof(_PyThreadState_Current),
           (void*)pid_data->globals._PyThreadState_Current);
+      bpf_trace_printk("read addr %llx ret %d\n", pid_data->globals._PyThreadState_Current, ret);
       if (_PyThreadState_Current == 0) {
         // The GIL is released, we can only get native stacks
         // until it is held again.
