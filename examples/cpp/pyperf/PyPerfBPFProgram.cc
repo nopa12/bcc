@@ -261,6 +261,8 @@ get_task_thread_id(struct task_struct const *task, enum pthreads_impl pthreads_i
 #error "Unsupported platform"
 #endif // __x86_64__
 
+  bpf_trace_printk("fs: %llx libc: %llx: ret %llx\n", fsbase, pthread_impl, ret);
+
   if (ret < 0) {
     return ERROR_BAD_FSBASE;
   }
@@ -422,7 +424,7 @@ on_event(struct pt_regs* ctx) {
       int x = bpf_probe_read_user(
           &_PyThreadState_Current, sizeof(_PyThreadState_Current),
           (void*)pid_data->globals._PyThreadState_Current);
-      bpf_trace_printk("read addr %llx ret %d\n", pid_data->globals._PyThreadState_Current, x);
+      bpf_trace_printk("read addr %llx ret %d\n", (unsigned long)pid_data->globals._PyThreadState_Current, x);
       if (_PyThreadState_Current == 0) {
         // The GIL is released, we can only get native stacks
         // until it is held again.
