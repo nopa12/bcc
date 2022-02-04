@@ -261,7 +261,7 @@ get_task_thread_id(struct task_struct const *task, enum pthreads_impl pthreads_i
 #error "Unsupported platform"
 #endif // __x86_64__
 
-  bpf_trace_printk("fs: %llx libc: %llx: ret %llx\n", fsbase, pthread_impl, ret);
+  bpf_trace_printk("fs: %llx libc: %llx: ret %llx\n", fsbase, pthreads_impl, ret);
 
   if (ret < 0) {
     return ERROR_BAD_FSBASE;
