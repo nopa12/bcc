@@ -243,7 +243,8 @@ get_task_thread_id(struct task_struct const *task, enum pthreads_impl pthreads_i
   switch (pthreads_impl) {
   case PTI_GLIBC:
     // TODO const bad
-    ret = fsbase - 0x6f0;
+    *thread_id = fsbase - 0x6f0;
+    ret = 0;
     break;
 
   case PTI_MUSL:
